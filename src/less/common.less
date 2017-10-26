@@ -1,0 +1,87 @@
+*{
+  box-sizing: border-box;
+}
+
+html{
+  height: 100%;
+  font-size: 62.5%; // 1rem=10px
+  color: #222;
+}
+
+body {
+  height: 100%;
+  background-color: #FFFFFF;
+  font-size: 1.2rem; // 12px
+  font-family: '微软雅黑';
+  margin: 0;
+  padding: 0;
+  a{
+    text-decoration: none;
+    &:hover{
+      text-decoration: none;
+    }
+  }
+  ol,ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  li{
+    list-style: none;
+  }
+
+  img{
+    border: none;
+  }
+
+  table {
+    border-collapse:collapse;
+  }
+  table.table>thead>tr>th {
+    text-align: center
+  }
+  // 在父元素中居住显示
+  c-b{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .c-p{//鼠标手
+    cursor: pointer;
+  }
+  .f-l {
+    float: left
+  }
+
+  .f-r {
+    float: right
+  }
+
+  // 隐藏文字，便于网页阅读器 seo，a链接被图片替换的时候
+  text-hide{
+    font: 0/0 a;
+    color: transparent;
+    text-shadow: none;
+    border: none;
+    background-color: transparent;
+  }
+  // before 防止margin叠加，顶部空白崩溃
+  .clearfix:before,
+  .clearfix:after {
+    content: "";
+    display: table;
+  }
+
+  .clearfix:after {
+    clear: both;
+  }
+}
+
+
+
+
+
+
+
+
+

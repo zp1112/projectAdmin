@@ -1,0 +1,51 @@
+{
+  "env": {
+    "node": true,
+    "es6": true,
+    "browser": true
+  },
+  "globals": {
+    "$": 1
+  },
+  "parser": "babel-eslint",
+  "extends": ["airbnb"],
+  "plugins": [
+    "html"
+  ],
+  "rules": {
+    "global-require": 0,
+    "comma-dangle": ["error", "never"],
+    "no-cond-assign": "error",
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "ignoreUrls": true,
+        "ignoreStrings": true
+      }
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "no-console": [
+      "error",
+      {
+        "allow": [
+          "warn",
+          "error",
+          "info",
+          "log"
+        ]
+      }
+    ]
+  }
+}
