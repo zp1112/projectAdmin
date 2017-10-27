@@ -2,7 +2,7 @@
  * @Author: candy
  * @Date: 2017-10-26 14:49:47
  * @Last Modified by: candy
- * @Last Modified time: 2017-10-27 14:16:22
+ * @Last Modified time: 2017-10-27 14:48:35
  */
 
 export default {
@@ -20,44 +20,13 @@ export default {
       edit: false,
       ruleForm: {
         name: '',
-        tid: '',
-        password: '',
-        passre: '',
-        admin: [],
-        email: '',
-        phone: ''
+        uid: []
       },
-      editPass: false,
-      teamList: [],
-      rules: {
-        name: [
-          { required: true, message: '请输入姓名', trigger: 'blur' }
-        ],
-        tid: [
-          { required: true, message: '请选择所在部门', trigger: 'change' }
-        ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'change' }
-        ],
-        passre: [
-          { required: true, message: '请再次输入密码', trigger: 'change', validator: validatePass }
-        ],
-        email: [
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change' }
-        ]
-      }
+      userList: []
     };
   },
-  watch: {
-    editPass(val) {
-      if (!val) {
-        this.ruleForm.passre = '';
-        this.ruleForm.password = '';
-      }
-    }
-  },
   mounted() {
-    if (this.$route.query.uid) {
+    if (this.$route.query.tid) {
       this.edit = true;
       this.$api.users.edit.request({ uid: this.$route.query.uid }).then(({ data }) => {
         if (!data.status) {
@@ -71,8 +40,8 @@ export default {
         }
       });
     }
-    this.$api.admin.team.request().then((res) => {
-      this.teamList = res.data;
+    this.$api.admin.users.request().then(({ data }) => {
+      this.userList = data;
     });
   },
   methods: {

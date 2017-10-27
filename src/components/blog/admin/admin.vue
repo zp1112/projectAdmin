@@ -24,9 +24,6 @@
       };
     },
     mounted() {
-      if (!this.$store.state.candyLogin) {
-        this.showLogin = true;
-      }
     },
     computed: {},
     methods: {

@@ -20,12 +20,13 @@ const token = sessionStorage.getItem('auth-access-token');
 // axios.defaults.baseURL = '/api';
 axios.defaults.baseURL = '/api';
 axios.interceptors.response.use((data) => { // 响应成功关闭loading
-  if (data.msg === '未登录！') {
-    router.push('login');
-  } else {
-    return data;
+  console.log(1111, data, router);
+  if (data.data.msg === '未登录！' && data.config.url !== '/api/isLogin') {
+    window.location.href = '/login';
+    // return Promise.reject();
   }
-}, (error) => Promise.reject(error));
+  return data;
+}, error => Promise.reject(error));
 
 
 const apiObj = {
@@ -73,11 +74,18 @@ const apiObj = {
   },
   users: {
     edit: {
-      url: '/users/edit',
+      url: '/users/edit'
+    },
+    save: {
+      url: '/users/save',
       method: 'post'
     },
     reg: {
       url: '/users/reg',
+      method: 'post'
+    },
+    delete: {
+      url: '/users/delete',
       method: 'post'
     }
   },

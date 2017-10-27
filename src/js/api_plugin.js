@@ -21,6 +21,16 @@ plugin.install = function (Vue) {
       get() {
         return axios;
       }
+    },
+    $has: {
+      get() {
+        return (permission, permissions) => {
+          if (permissions.indexOf(permission) === -1) {
+            return false;
+          }
+          return true;
+        };
+      }
     }
   });
 };

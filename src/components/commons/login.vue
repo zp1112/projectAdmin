@@ -34,8 +34,6 @@
         const { name, pass: password } = this.ruleForm;
         this.$api.login.request({ name, password }).then(({ data }) => {
           if (data.status) {
-            localStorage.candyLogin = true;
-            this.$store.state.candyLogin = true;
             this.$emit('loginSuccess');
           } else {
             this.$message(data.msg);

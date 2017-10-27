@@ -1,6 +1,5 @@
 <template>
   <div class="menu-wrapper">
-    <h1>项目汇报管理系统</h1>
     <el-row class="tac">
       <el-col :span="8">
         <el-menu :default-active="onRoute" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" router>
@@ -24,6 +23,7 @@
             <template slot="title"><i class="el-icon-message"></i>用户管理</template>
             <el-menu-item index="/users/list">用户列表</el-menu-item>
             <el-menu-item index="/users/add">新增用户</el-menu-item>
+            <el-menu-item index="/team/add">新增部门</el-menu-item>
           </el-submenu>
           <el-menu-item
             index="/logout"><i class="el-icon-setting"></i>登出</el-menu-item>

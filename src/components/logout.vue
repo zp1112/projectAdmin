@@ -12,7 +12,7 @@
     },
     mounted() {
       this.$api.logout.request().then(() => {
-        this.$router.push('/login');
+        window.location.href = `/login?backup=${this.$route.query.backup}`;
       });
     },
     methods: {}

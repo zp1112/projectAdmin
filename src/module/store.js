@@ -7,13 +7,9 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 const state = {
   sentence: '',
-  candyLogin: false,
   outProjects: [],
   inProjects: []
 };
-if (localStorage.candyLogin) {
-  state.candyLogin = true;
-}
 const store = new Vuex.Store({
   state
 });

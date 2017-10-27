@@ -11,18 +11,18 @@
       <el-form-item label="项目所属部门">
         <el-select v-model="teams" filterable multiple placeholder="请选择所属部门">
           <el-option v-for="item in teamList"
-          :key="item.uuid"
-          :label="item.name"
-          :value="item.uuid"></el-option>
+          :key="item.tid"
+          :label="item.tname"
+          :value="item.tid"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="项目成员">
         <el-select v-model="form.members" filterable multiple placeholder="请选择">
           <el-option
             v-for="item in members"
-            :key="item._id"
+            :key="item.uid"
             :label="item.name"
-            :value="item._id">
+            :value="item.uid">
           </el-option>
         </el-select>
       </el-form-item>
@@ -56,22 +56,21 @@
     mounted() {
       this.form.owner = JSON.parse(localStorage.userInfo).name;
       this.$api.admin.team.request().then((res) => {
-        this.teamList = res.data.team;
+        this.teamList = res.data;
       });
       this.$api.admin.users.request().then((res) => {
-        this.members = res.data.user;
+        this.members = res.data;
       });
     },
     methods: {
       onSubmit() {
         this.teams.forEach((row) => {
           const obj = this.teamList.find(item => item.uuid === row);
-          console.log(1111, obj)
           if (obj) {
             this.form.teams.push(obj);
           }
         });
-        this.$api.project.new.request({json: JSON.stringify(this.form)}).then((res) => {
+        this.$api.project.new.request({ json: JSON.stringify(this.form) }).then((res) => {
           this.members = res.data.user;
 //          this.$router.push('/');
         });

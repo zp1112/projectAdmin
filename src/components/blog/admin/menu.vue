@@ -9,8 +9,7 @@
         <li><router-link to="/admin/post">发表文章</router-link></li>
         <li><router-link to="/admin/manage">管理列表</router-link></li>
         <li><router-link to="/admin/edit">编辑文章</router-link></li>
-        <li v-if="$store.state.candyLogin"
-            @click.prevent="logout"><a href="#">退出登陆</a></li>
+        <li @click.prevent="logout"><a href="#">退出登陆</a></li>
       </ul>
     </div>
   </div>
@@ -19,7 +18,7 @@
 
   export default {
     props: {},
-    components: {  },
+    components: { },
     data() {
       return {
         search: '',
@@ -37,8 +36,6 @@
     computed: {},
     methods: {
       logout() {
-        localStorage.candyLogin = '';
-        this.$store.state.candyLogin = false;
         this.$api.logout.request().then(({ data }) => {
           location.href = '/blog/home';
         });
