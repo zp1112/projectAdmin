@@ -14,7 +14,7 @@ module.exports = (app) => {
     if (req.session.user.admin.split(',').indexOf('root') === -1) {
       res.send({
         status: 0,
-        msg: '无权限'
+        msg: '当前用户无权限！'
       });
     } else {
       const userInfo = req.body.userInfo;
@@ -23,7 +23,7 @@ module.exports = (app) => {
       // 生成密码的 md5 值
       const md5 = crypto.createHash('md5');
       password = md5.update(password).digest('hex');
-      const result = await handleUserReg({ name, password, tid, admin: admin.join(','), phone, email });
+      const result = await handleUserReg({ name, password, tid, admin, phone, email });
       res.send(result);
     }
   });
@@ -50,7 +50,7 @@ module.exports = (app) => {
   app.post('/isLogin', async (req, res) => {
     if (!req.session.user) {
       res.send({
-        status: 0,
+        status: -1,
         msg: '未登录！'
       });
     } else {

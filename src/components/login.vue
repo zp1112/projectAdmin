@@ -52,13 +52,10 @@
 <style lang="less" type="text/less" scoped>
   .login-wrapper{
     position: fixed;
-    top: 0;
-    bottom: 0;
     left: 0;
     right: 0;
     margin: auto;
     width: 400px;
-    height: 300px;
     background: rgba(0,0,0,.4);
     .title{
       text-align: center;

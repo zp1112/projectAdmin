@@ -37,6 +37,17 @@
       return {
       };
     },
+    watch: {
+      '$store.state.errMsg': function (val) {
+        if (val) {
+          this.$message({
+            message: val,
+            type: 'error'
+          });
+          this.$store.commit('API_ERROR', '');
+        }
+      }
+    },
     mounted() {
 
     },

@@ -21,6 +21,14 @@ const routes = [
     }
   },
   {
+    path: '/role',
+    component: (resolve) => {
+      System.import('../components/admin/role.vue').then((comp) => {
+        resolve(comp);
+      });
+    }
+  },
+  {
     path: '/logout',
     component: (resolve) => {
       System.import('../components/logout.vue').then((comp) => {
@@ -89,43 +97,4 @@ const rootPath = [
   '/users/add',
   '/team/add'
 ];
-// router.beforeEach((to, from, next) => {
-//   if (to.path !== '/login') {
-//     if (!store.state.userInfo) {
-//       next('/login');
-//     }
-//     if (rootPath.indexOf(to.path) !== -1) {
-//       if (JSON.parse(localStorage.getItem('userInfo')).admin.split(',').indexOf('root') !== -1) {
-//         next();
-//       } else {
-//         next('/403');
-//       }
-//     } else {
-//       next();
-//     }
-//     // axios.post('/isLogin')
-//     // .then((res) => {
-//     //   if (res.data.status === 1) {
-
-//     //   } else {
-//     //     router.push('login');
-//     //   }
-//     // })
-//     // .catch((err) => {
-//     //   console.log(err);
-//     // });
-//   } else {
-//     axios.post('/isLogin')
-//     .then((res) => {
-//       if (res.data.status === 1) {
-//         router.push('/index');
-//       } else {
-//         next();
-//       }
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-//   }
-// });
 export default router;

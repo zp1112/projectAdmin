@@ -2,7 +2,7 @@
  * @Author: candy
  * @Date: 2017-10-26 14:49:47
  * @Last Modified by: candy
- * @Last Modified time: 2017-10-27 14:48:35
+ * @Last Modified time: 2017-10-30 09:19:43
  */
 
 export default {
@@ -63,7 +63,7 @@ export default {
             ruleForm.admin = admin.join(',');
             const result = await this.$api.users.save.request({ userInfo: ruleForm });
             if (result.status) {
-              if (JSON.parse(localStorage.getItem('userInfo')).uid === this.ruleForm.uid) {
+              if (this.$store.state.currentUserInfo.uid === this.ruleForm.uid) {
                 this.$message({
                   message: '请重新登录获取最新信息！',
                   type: 'warning'

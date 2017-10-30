@@ -54,7 +54,7 @@
       };
     },
     mounted() {
-      this.form.owner = JSON.parse(localStorage.userInfo).name;
+      this.form.owner = this.$store.state.currentUserInfo.name;
       this.$api.admin.team.request().then((res) => {
         this.teamList = res.data;
       });

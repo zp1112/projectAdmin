@@ -38,8 +38,7 @@
       </el-form-item>
       <el-form-item label="权限" prop="type">
         <el-checkbox-group v-model="ruleForm.admin">
-          <el-checkbox label="root" name="type">管理员</el-checkbox>
-          <el-checkbox label="member" name="type">成员</el-checkbox>
+          <el-checkbox v-for="item in roles" :key="item.rname" :label="item.rname">{{item.rname}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item>

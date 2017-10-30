@@ -79,7 +79,8 @@
     },
     computed: {
       disabled() {
-        return JSON.parse(localStorage.getItem('userInfo')).admin.split(',').indexOf('root') === -1;
+        return false;
+        // return this.$store.state.currentUserInfo.admin.split(',').indexOf('root') === -1;
       }
     },
     mounted() {

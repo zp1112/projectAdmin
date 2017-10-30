@@ -1,7 +1,7 @@
 exports.checkLogin = function (req, res, next) {
   if (!req.session.user) {
     res.send({
-      status: 0,
+      status: -1,
       msg: '未登录！'
     });
   } else {

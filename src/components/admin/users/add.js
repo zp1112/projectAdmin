@@ -2,7 +2,7 @@
  * @Author: candy
  * @Date: 2017-10-26 14:49:47
  * @Last Modified by: candy
- * @Last Modified time: 2017-10-27 14:16:22
+ * @Last Modified time: 2017-10-30 17:56:12
  */
 
 export default {
@@ -18,6 +18,7 @@ export default {
     };
     return {
       edit: false,
+      roles: [],
       ruleForm: {
         name: '',
         tid: '',
@@ -74,14 +75,19 @@ export default {
     this.$api.admin.team.request().then((res) => {
       this.teamList = res.data;
     });
+    this.$api.admin.role.roles.request().then(({ data }) => {
+      this.roles = data.roles;
+    });
   },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          console.log(this.ruleForm);
           if (!this.edit) {
-            const result = await this.$api.users.reg.request({ userInfo: this.ruleForm });
+            const { admin, ...rest } = this.ruleForm;
+            const ruleForm = rest;
+            ruleForm.admin = admin.join(',');
+            const result = await this.$api.users.reg.request({ userInfo: ruleForm });
             if (result.status) {
               this.$router.push('/users/list');
             }
@@ -94,7 +100,7 @@ export default {
             ruleForm.admin = admin.join(',');
             const result = await this.$api.users.save.request({ userInfo: ruleForm });
             if (result.status) {
-              if (JSON.parse(localStorage.getItem('userInfo')).uid === this.ruleForm.uid) {
+              if (this.$store.state.currentUserInfo.uid === this.ruleForm.uid) {
                 this.$message({
                   message: '请重新登录获取最新信息！',
                   type: 'warning'
@@ -108,7 +114,6 @@ export default {
             }
           }
         } else {
-          console.log('error submit!!');
           return false;
         }
       });

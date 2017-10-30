@@ -1,66 +1,51 @@
 /**
  * Created by Candy on 2017/8/14.
  */
-import Team from '../models/team';
-import User from '../models/user';
+
+import { getRoles, saveRoles, saveRole, deleteRole } from '../models/admin';
 
 module.exports = function (app) {
-  app.post('/team/add', (req, res) => {
-    const { name } = req.body;
-    const newTeam = new Team({
-      name
-    });
-    // 检查用户名是否已经存在
-    Team.get(newTeam.name, (err, user) => {
-      if (err) {
-        res.send({
-          status: 0,
-          msg: `注册错误！${err}`
-        });
-      } else if (user) {
-        res.send({
-          status: 0,
-          msg: '用户已存在'
-        });
-      } else {
-        newTeam.save((err) => {
-          if (err) {
-            res.send({
-              status: 0,
-              msg: `注册错误！${err}`
-            });
-          }
-          res.send({
-            status: 1,
-            msg: '注册成功'
-          });
-        });
-      }
+  app.get('/roles', async (req, res) => {
+    const result = await getRoles();
+    res.send({
+      status: 1,
+      roles: result
     });
   });
-  // app.get('/team', async (req, res) => {
-  //   Team.getAll((err, team) => {
-  //     res.send({
-  //       status: 1,
-  //       team
-  //     });
-  //   });
-  // });
-  app.post('/team/delete', async (req, res) => {
-    const uuid = req.body.uuid;
-    Team.deleteOne(uuid, (err) => {
+  app.post('/roles/save', async (req, res) => {
+    const update = await saveRoles(req.body.rname, req.body.roles);
+    if (update.err) {
+      res.send({
+        status: 0,
+        msg: '更新失败！请重试'
+      });
+    } else {
+      const result = await getRoles();
       res.send({
         status: 1,
-        msg: '删除成功!'
+        roles: result
       });
-    });
+    }
   });
-  app.get('/users', async (req, res) => {
-    User.getAll((err, user) => {
+  app.post('/roles/new', async (req, res) => {
+    const update = await saveRole(req.body.rname);
+    if (update.err) {
+      res.send({
+        status: 0,
+        msg: '添加失败！请检查角色名字是否重复'
+      });
+    } else {
+      const result = await getRoles();
       res.send({
         status: 1,
-        user
+        roles: result
       });
+    }
+  });
+  app.post('/roles/delete', async (req, res) => {
+    await deleteRole(req.body.rname);
+    res.send({
+      status: 1
     });
   });
 };

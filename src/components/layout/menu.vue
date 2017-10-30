@@ -18,6 +18,7 @@
             </el-menu-item-group>
           </el-submenu>
           <el-menu-item index="/new"><i class="el-icon-menu"></i>立项</el-menu-item>
+          <el-menu-item index="/role"><i class="el-icon-menu"></i>权限管理</el-menu-item>
           <el-menu-item index="/report"><i class="el-icon-setting"></i>汇报</el-menu-item>
           <el-submenu index="/users">
             <template slot="title"><i class="el-icon-message"></i>用户管理</template>
@@ -49,7 +50,7 @@
         return this.$route.path;
       },
       userInfo() {
-        return JSON.parse(localStorage.getItem('userInfo'));
+        return this.$store.state.currentUserInfo;
       },
       inProjects() {
         return this.$store.state.inProjects;

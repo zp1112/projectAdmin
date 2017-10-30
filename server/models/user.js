@@ -4,6 +4,14 @@ import db from '../models/mysql';
 import { getTimestamp } from '../utils';
 
 exports.handleUserReg = async ({ tid, name, password, admin, phone, email }) => {
+  const sql1 = format('select uid from users where name = ?', [name]);
+  const user = await db.query(sql1);
+  if (user.length) {
+    return {
+      status: 0,
+      msg: '用户名已存在！'
+    };
+  }
   const sql = format('SELECT tempuid FROM temp_uid limit 1');
   const uid = await db.query(sql);
   if (uid.length) {
@@ -68,7 +76,6 @@ exports.handleUsersList = async () => {
 };
 
 exports.handleUserEdit = async (uid) => {
-  console.log(uid);
   const sql = format('select name, uid, tid, phone, email, admin from users where uid=?', [uid]);
   const result = await db.query(sql);
   if (!result.length) {
@@ -104,7 +111,7 @@ exports.handleUserDelete = async (uid) => {
   if (result.err) {
     return {
       status: 0,
-      msg: '删除'
+      msg: '删除失败！请重试'
     };
   }
   return {
