@@ -2,7 +2,7 @@
  * @Author: candy
  * @Date: 2017-10-30 11:32:20
  * @Last Modified by: candy
- * @Last Modified time: 2017-10-30 17:31:32
+ * @Last Modified time: 2017-11-03 17:21:42
  */
 
 <template>
@@ -22,8 +22,13 @@
           highlight-current-row
           ref="singleTable"
           :data="roleData"
+          @selection-change="handleSelectionChange"
           @current-change="handleCurrentChange"
           style="width: 100%">
+          <el-table-column
+            type="selection"
+            width="55">
+          </el-table-column>
           <el-table-column
             label="角色">
             <template scope="scope">
@@ -50,6 +55,8 @@
             </template>
           </el-table-column>
         </el-table>
+        <el-button v-if="multipleSelection.length" type="error" @click="handleDeleteAll">批量删除</el-button>
+        <el-button v-if="multipleSelection.length" type="success" @click="toggleSelection()">取消选中</el-button>
       </el-col>
       <el-col :span="12" v-show="currentRole" class="right">
         <el-button
@@ -76,6 +83,7 @@
 </template>
 <script type="text/babel">
   import CountUp from 'countup';
+import tableMixin from '../mixins/table_mixin';
 
   export default {
     name: '',
@@ -112,6 +120,18 @@
             id: 'team_edit',
             label: '编辑部门'
           }]
+        }, {
+          label: '路由',
+          children: [{
+            id: '/role',
+            label: '权限管理'
+          }, {
+            id: '/users/add',
+            label: '新增用户'
+          }, {
+            id: '/team/add',
+            label: '新增部门'
+          }]
         }],
         defaultProps: {
           children: 'children',
@@ -121,6 +141,7 @@
         currentRow1: ''
       };
     },
+    mixins: [tableMixin],
     watch: {
       currentRole(val) {
         if (val) {
@@ -144,10 +165,31 @@
       });
     },
     methods: {
+      handleDeleteAll() {
+        this.$alert('确定批量删除选中的角色吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          callback: (action) => {
+            if (action === 'confirm') {
+              this.$api.admin.role.deleteAll.request({ rnames: this.multipleSelection }).then(({ data }) => {
+                if (data.status) {
+                  this.roleData = data.roles;
+                  this.currentRole = '';
+                } else {
+                  this.$message({
+                    message: '删除失败！请重试',
+                    type: 'error'
+                  });
+                }
+              });
+            }
+          }
+        });
+      },
       handleCurrentChange(val) {
-        this.currentRole = val.rname;
-        this.$refs.singleTable.setCurrentRow(val);
         if (val) {
+          // this.currentRole = val.rname;
+          this.$refs.singleTable.setCurrentRow(val);
           this.currentRow = val;
         }
       },

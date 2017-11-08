@@ -2,7 +2,7 @@
  * @Author: candy
  * @Date: 2017-10-26 14:49:47
  * @Last Modified by: candy
- * @Last Modified time: 2017-10-30 17:56:12
+ * @Last Modified time: 2017-10-31 17:49:02
  */
 
 export default {
@@ -88,7 +88,11 @@ export default {
             const ruleForm = rest;
             ruleForm.admin = admin.join(',');
             const result = await this.$api.users.reg.request({ userInfo: ruleForm });
-            if (result.status) {
+            if (result.data.status) {
+              this.$message({
+                message: result.data.msg,
+                type: 'success'
+              });
               this.$router.push('/users/list');
             }
           } else {
@@ -99,7 +103,7 @@ export default {
             }
             ruleForm.admin = admin.join(',');
             const result = await this.$api.users.save.request({ userInfo: ruleForm });
-            if (result.status) {
+            if (result.data.status) {
               if (this.$store.state.currentUserInfo.uid === this.ruleForm.uid) {
                 this.$message({
                   message: '请重新登录获取最新信息！',
@@ -109,6 +113,10 @@ export default {
                   this.$router.push('/logout');
                 }, 2000);
               } else {
+                this.$message({
+                  message: result.data.msg,
+                  type: 'success'
+                });
                 this.$router.push('/users/list');
               }
             }

@@ -4,30 +4,16 @@
       <el-col :span="8">
         <el-menu :default-active="onRoute" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" router>
           <el-menu-item index="/index"><i class="el-icon-menu"></i>首页</el-menu-item>
-          <el-submenu index="/project">
-            <template slot="title"><i class="el-icon-message"></i>项目列表</template>
-            <el-menu-item-group>
-              <template slot="title">进行中</template>
-              <el-menu-item v-for="item in inProjects" :index="`/project/detail/${item.uuid}`">{{item.name}}
-</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group>
-              <template slot="title">已结项</template>
-              <el-menu-item v-for="item in outProjects" :index="`/project/detail/${item.uuid}`">{{item.name}}
-</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
+          <el-menu-item index="/projects"><i class="el-icon-menu"></i>项目</el-menu-item>
           <el-menu-item index="/new"><i class="el-icon-menu"></i>立项</el-menu-item>
-          <el-menu-item index="/role"><i class="el-icon-menu"></i>权限管理</el-menu-item>
-          <el-menu-item index="/report"><i class="el-icon-setting"></i>汇报</el-menu-item>
+          <el-menu-item index="/role" v-if="menus['/role']"><i class="el-icon-menu"></i>权限管理</el-menu-item>
+          <el-menu-item index="/report" v-if="menus['/report']"><i class="el-icon-setting"></i>汇报</el-menu-item>
           <el-submenu index="/users">
             <template slot="title"><i class="el-icon-message"></i>用户管理</template>
             <el-menu-item index="/users/list">用户列表</el-menu-item>
-            <el-menu-item index="/users/add">新增用户</el-menu-item>
-            <el-menu-item index="/team/add">新增部门</el-menu-item>
+            <el-menu-item index="/users/add" v-if="menus['/users/add']">新增用户</el-menu-item>
+            <el-menu-item index="/team/add" v-if="menus['/team/add']">新增部门</el-menu-item>
           </el-submenu>
-          <el-menu-item
-            index="/logout"><i class="el-icon-setting"></i>登出</el-menu-item>
           <el-menu-item
             index="/login"><i class="el-icon-setting"></i>登录</el-menu-item>
         </el-menu>
@@ -57,6 +43,9 @@
       },
       outProjects() {
         return this.$store.state.outProjects;
+      },
+      menus() {
+        return this.$store.state.menus;
       }
     },
     mounted() {

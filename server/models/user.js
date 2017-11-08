@@ -3,6 +3,16 @@ import crypto from 'crypto';
 import db from '../models/mysql';
 import { getTimestamp } from '../utils';
 
+
+const _getPowersByAdmin = async (admin) => {
+  const powersResult = await db.query(format('select roles from role where rname in (?)', [admin.split(',')]));
+  let powers = [];
+  for (const item of powersResult) {
+    powers = powers.concat(item.roles.split(','));
+  }
+  return new Set(powers);
+};
+
 exports.handleUserReg = async ({ tid, name, password, admin, phone, email }) => {
   const sql1 = format('select uid from users where name = ?', [name]);
   const user = await db.query(sql1);
@@ -55,7 +65,7 @@ exports.handleUserLogin = async (name, password) => {
     };
   }
   delete user[0].password;
-  console.log(user[0]);
+  user[0].powers = await _getPowersByAdmin(user[0].admin);
   return {
     status: 1,
     msg: '登录成功',
@@ -69,10 +79,37 @@ exports.handleTeamList = async () => {
   return result;
 };
 
-exports.handleUsersList = async () => {
-  const sql = format('select name, uid, tid, createdTime, updatedTime, phone, email, admin, (SELECT tname FROM team t WHERE t.tid=tid ) as tname from users ');
-  const result = await db.query(sql);
-  return result;
+exports.handleUsersList = async (query) => {
+  const { type } = query;
+  let result;
+  let total;
+  if (type == 0) {
+    // 分页查询
+    const page = Number(query.page) || 1;
+    const sql = format(`select name, uid, tid, createdTime, updatedTime, phone, email, admin,
+    (SELECT tname FROM team t WHERE t.tid=tid ) as tname from users ORDER BY updatedTime DESC limit ?,?`,
+    [(page - 1) * 10, 10]);
+    total = await db.query(format('select count(*) as count from users'));
+    result = await db.query(sql);
+    return {
+      status: 1,
+      users: result,
+      pages: {
+        total: total[0].count,
+        limit: 10,
+        curPage: page
+      }
+    };
+  } else if (type == 1) {
+    // 关键词查询
+    const keyword = query.keyword;
+    const sql = format(`select name, uid from users where name like '%${keyword}%'`);
+    result = await db.query(sql);
+    return {
+      status: 1,
+      users: result
+    };
+  }
 };
 
 exports.handleUserEdit = async (uid) => {
@@ -89,8 +126,19 @@ exports.handleUserEdit = async (uid) => {
     data: result[0]
   };
 };
+const _searchUserByName = async (name) => {
+  const result = await db.query(format('select count(*) as count from users where name=?', [name]));
+  return result[0].count;
+};
 
 exports.handleUserSave = async (userInfo) => {
+  const exist = await _searchUserByName(userInfo.name);
+  if (exist) {
+    return {
+      status: 0,
+      msg: '名字已存在！'
+    };
+  }
   userInfo.updatedTime = getTimestamp();
   const sql = format('update users set ? where uid=?', [userInfo, userInfo.uid]);
   const result = await db.query(sql);
@@ -101,7 +149,8 @@ exports.handleUserSave = async (userInfo) => {
     };
   }
   return {
-    status: 1
+    status: 1,
+    msg: '保存成功！'
   };
 };
 
@@ -122,5 +171,6 @@ exports.handleUserDelete = async (uid) => {
 exports.getUserInfo = async (uid) => {
   const sql = format('select * from users where uid=?', [uid]);
   const result = await db.query(sql);
+  result[0].powers = await _getPowersByAdmin(result[0].admin, result[0].uid);
   return result[0];
 };

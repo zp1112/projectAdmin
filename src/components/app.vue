@@ -1,7 +1,20 @@
 <!--整个路由容器-->
 <template>
   <div style="height: 100%;">
-    <h1 class="header">项目汇报管理系统</h1>
+    <div class="header-wrapper">
+      <span class="header">项目汇报管理系统</span>
+      <template v-if="$store.state.currentUserInfo">
+        <span class="header-right">欢迎你，
+          <span>{{$store.state.currentUserInfo.name}}</span>
+          <router-link to="/logout">退出</router-link>
+        </span>
+      </template>
+      <template v-else>
+        <span class="header-right">
+          <router-link to="/login">请登录</router-link>
+        </span>
+      </template>
+    </div>
     <el-row style="height: 100%;">
       <el-col :span="4" style="height: 100%;">
         <div class="menu"><Menus /></div>
@@ -21,10 +34,23 @@
     /*float: left;*/
     margin: 80px;
   }
-  .header{
+  .header-wrapper{
+    line-height: 80px;
     background: #5db0ec;
     margin: 0;
-    padding: 20px;
+    padding: 0 20px;
+    font-size: 26px;
+    .header-right{
+      float: right;
+      font-size: 18px;
+      color: #fff;
+      a{
+        margin-left: 20px;
+        color: #000;
+        cursor: pointer;
+        font-size: 16px;
+      }
+    }
   }
 </style>
 <script type="text/babel">

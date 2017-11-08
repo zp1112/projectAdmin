@@ -1,9 +1,20 @@
 <template>
   <div class="users-wrapper">
+    <el-button type="primary"
+    :disabled="$store.state.currentUserInfo.powers.indexOf('/users/add') === -1"
+    @click="$router.push('/users/add')"
+    style="marginBottom: 20px">新增用户</el-button>
     <el-table
       :data="userList"
+      @selection-change="handleSelectionChange"
       border
+      ref="singleTable"
       style="width: 100%">
+      <el-table-column
+        v-if="$store.state.currentUserInfo.powers.indexOf('users_delete') !== -1"
+        type="selection"
+        width="55">
+      </el-table-column>
       <el-table-column
         label="姓名"
         width="180">
@@ -45,6 +56,7 @@
         filter-placement="bottom-end">
         <template scope="scope">
           <el-tag
+            size="mini"
             type="primary"
             v-for="item in scope.row.admin.split(',')"
             :key="item"
@@ -55,66 +67,111 @@
         <template scope="scope">
           <el-button
             size="small"
-            :disabled="disabled"
+            :disabled="userEdit"
             @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button
             size="small"
             type="danger"
-            :disabled="disabled"
+            :disabled="userDelete"
             @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <div class="page">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :page-size="pages.limit"
+        layout="total, prev, pager, next, jumper"
+        :current-page.sync="pages.curPage"
+        :total="pages.total">
+      </el-pagination>
+    </div>
   </div>
 </template>
 <script type="text/babel">
-  export default {
-    name: '',
-    components: {},
-    props: {},
-    data() {
-      return {
-        userList: []
-      };
-    },
-    computed: {
-      disabled() {
-        return false;
-        // return this.$store.state.currentUserInfo.admin.split(',').indexOf('root') === -1;
+import tableMixin from '../../mixins/table_mixin';
+
+export default {
+  name: '',
+  components: {},
+  props: {},
+  data() {
+    return {
+      userList: [],
+      pages: {
+        total: 0,
+        limit: 0,
+        curPage: 1
       }
+    };
+  },
+  mixins: [tableMixin],
+  computed: {
+    userDelete() {
+      return this.$store.state.currentUserInfo.powers.indexOf('user_delete') === -1;
     },
-    mounted() {
-      this.$api.admin.users.request().then(({ data }) => {
-        this.userList = data;
+    userEdit() {
+      return this.$store.state.currentUserInfo.powers.indexOf('user_edit') === -1;
+    }
+  },
+  mounted() {
+    this.getUserList(this.$route.query.page);
+  },
+  methods: {
+    getUserList(page = 1) {
+      this.$api.admin.users.request({ page, type: 0 }).then(({ data }) => {
+        this.userList = data.users;
+        this.pages = data.pages;
       });
     },
-    methods: {
-      handleEdit(index, row) {
-        this.$router.push(`/users/add?uid=${row.uid}`);
-      },
-      handleDelete(index, row) {
-        this.$alert('确定删除吗？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          callback: (action) => {
-            if (action === 'confirm') {
-              this.$api.users.delete.request({ uid: row.uid }).then(({ data }) => {
-                if (data.status) {
+    handleCurrentChange(val) {
+      this.getUserList(val);
+    },
+    handleEdit(index, row) {
+      this.$router.push(`/users/add?uid=${row.uid}`);
+    },
+    handleDelete(index, row) {
+      let msg = '确定删除吗？';
+      const bool = row.uid === this.$store.state.currentUserInfo.uid;
+      if (bool) {
+        msg = '确定删除当前登录用户吗？';
+      }
+      this.$alert(msg, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        callback: (action) => {
+          if (action === 'confirm') {
+            this.$api.users.delete.request({ uid: row.uid }).then(({ data }) => {
+              if (data.status) {
+                if (bool) {
+                  this.$message({
+                    message: '请重新登录！',
+                    type: 'warning'
+                  });
+                  setTimeout(() => {
+                    this.$route.push('/logout');
+                  }, 2000);
+                } else {
                   const i = this.userList.findIndex(v => v.uid === row.uid);
                   this.userList.splice(i, 1);
-                } else {
-                  this.$message({
-                    message: '删除失败！请重试',
-                    type: 'error'
-                  });
                 }
-              });
-            }
+              } else {
+                this.$message({
+                  message: '删除失败！请重试',
+                  type: 'error'
+                });
+              }
+            });
           }
-        });
-      }
+        }
+      });
     }
-  };
+  }
+};
 </script>
 <style lang="less" type="text/less" scoped>
+.page{
+  text-align: right;
+  margin-top: 20px;
+}
 </style>

@@ -36,10 +36,10 @@
           if (data.status) {
             this.$store.commit('GET_USER_INFO', data.user);
             const nextPath = this.$route.query.backup;
-            if (nextPath === '/403') {
-              this.$router.push(this.$route.query.backup || '/index');
+            if (nextPath === '/403' || !nextPath || nextPath === '/login') {
+              window.location.href = '/index';
             } else {
-              this.$router.push('/index');
+              window.location.href = this.$route.query.backup || '/index';
             }
           } else {
             this.$message(data.msg);

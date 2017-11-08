@@ -72,6 +72,10 @@ const apiObj = {
       delete: {
         url: '/roles/delete',
         method: 'post'
+      },
+      deleteAll: {
+        url: '/roles/delete_all',
+        method: 'post'
       }
     }
   },
@@ -99,6 +103,20 @@ const apiObj = {
     },
     list: {
       url: '/project/list'
+    },
+    owner: {
+      url: '/project/owner'
+    },
+    report: {
+      url: '/project/report',
+      method: 'post'
+    },
+    detail: {
+      url: '/project/detail'
+    },
+    delete: {
+      url: '/project/delete',
+      method: 'post'
     }
   }
 };

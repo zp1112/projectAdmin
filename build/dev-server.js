@@ -71,7 +71,8 @@ app.use(hotMiddleware);
 
 // serve pure static assets
 const staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory);
-app.use(staticPath, express.static('./static'));
+app.use('/', express.static('./static'));
+// app.use(staticPath, express.static('./static'));
 
 app.post('/sss', (req, res) => {
   res.send({ status: 1 });

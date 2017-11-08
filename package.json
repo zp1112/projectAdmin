@@ -48,10 +48,12 @@
     "stylus-loader": "^3.0.1",
     "superagent": "^3.5.2",
     "throttle-debounce": "^1.0.1",
+    "tinymce": "^4.7.1",
     "vue": "^2.1.8",
     "vue-router": "^2.1.1",
     "vue-scroll": "^2.0.3",
-    "vuex": "^2.0.0"
+    "vuex": "^2.0.0",
+    "wangeditor": "^3.0.12"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.0",

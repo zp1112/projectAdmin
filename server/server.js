@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import superagent from 'superagent';
+import url from 'url';
 import cheerio from 'cheerio';
 import config from '../config';
 import { format } from 'mysql';
@@ -37,6 +38,21 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24
   }
 }));
+const whithoutAuth = ['/login', '/logout'];
+app.use((req, res, next) => {
+  if (whithoutAuth.indexOf(url.parse(req.url).pathname) === -1) {
+    if (!req.session.user) {
+      res.send({
+        status: -1,
+        msg: '未登录！'
+      });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 routes(app);
 // 监听端口
 app.listen(4000);

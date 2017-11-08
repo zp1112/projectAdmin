@@ -48,4 +48,8 @@ module.exports = function (app) {
       status: 1
     });
   });
+  app.post('/roles/delete_all', async (req, res) => {
+    const result = await deleteRole(req.body.rnames, 'all');
+    res.send(result);
+  });
 };

@@ -3,10 +3,8 @@
  */
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import axios from 'axios';
-import store from './store';
+import store from '../store';
 
-Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
@@ -21,9 +19,16 @@ const routes = [
     }
   },
   {
-    path: '/role',
+    path: '/report',
     component: (resolve) => {
-      System.import('../components/admin/role.vue').then((comp) => {
+      System.import('../components/project/report.vue').then((comp) => {
+        resolve(comp);
+      });
+    }
+  }, {
+    path: '/users/list',
+    component: (resolve) => {
+      System.import('../components/admin/users/list.vue').then((comp) => {
         resolve(comp);
       });
     }
@@ -41,14 +46,6 @@ const routes = [
     }
   },
   {
-    path: '/new',
-    component: (resolve) => {
-      System.import('../components/new/index.vue').then((comp) => {
-        resolve(comp);
-      });
-    }
-  },
-  {
     path: '/login',
     component: (resolve) => {
       System.import('../components/login.vue').then((comp) => {
@@ -57,24 +54,25 @@ const routes = [
     }
   },
   {
-    path: '/users/list',
+    path: '/new',
     component: (resolve) => {
-      System.import('../components/admin/users/list.vue').then((comp) => {
-        resolve(comp);
-      });
-    }
-  }, {
-    path: '/users/add',
-    component: (resolve) => {
-      System.import('../components/admin/users/add.vue').then((comp) => {
+      System.import('../components/project/new.vue').then((comp) => {
         resolve(comp);
       });
     }
   },
   {
-    path: '/team/add',
+    path: '/projects',
     component: (resolve) => {
-      System.import('../components/admin/users/teamadd.vue').then((comp) => {
+      System.import('../components/home/index.vue').then((comp) => {
+        resolve(comp);
+      });
+    }
+  },
+  {
+    path: '/project/detail',
+    component: (resolve) => {
+      System.import('../components/project/detail.vue').then((comp) => {
         resolve(comp);
       });
     }
@@ -88,11 +86,15 @@ const routes = [
     }
   }];
 
+
+Vue.use(VueRouter);
+
 const router = new VueRouter({
   mode: 'history',
   routes,
   linkActiveClass: 'active-link'
 });
+
 const rootPath = [
   '/users/add',
   '/team/add'
